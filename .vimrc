@@ -37,15 +37,16 @@ set rtp+=$vundle
 call vundle#begin()
 
     Plugin 'VundleVim/Vundle.vim'               " let Vundle manage Vundle, required
-
+    " need to install ctr-p and fugitive
     "-------------------=== Code/Project navigation ===-------------
     Plugin 'scrooloose/nerdtree'                " Project and file navigation
     Plugin 'majutsushi/tagbar'                  " Class/module browser
     Plugin 'kien/ctrlp.vim'                     " Fast transitions on project files
 
     "-------------------=== Other ===-------------------------------
+    Plugin 'scrooloose/nerdcommenter'           " commenting plugin
     "Plugin 'w0rp/ale'                           " lint plugin see https://github.com/w0rp/ale
-    Plugin 'mattn/emmet-vim'                    " CSS, HTML, Javascript Autocomplete 
+    Plugin 'mattn/emmet-vim'                    " CSS, HTML, Javascript Autocomplete
     Plugin 'AutoSave'                           " AutoSave files turn off with :AutoSaveToggle
     Plugin 'bling/vim-airline'                  " Lean & mean status/tabline for vim
     Plugin 'vim-airline/vim-airline-themes'     " Themes for airline
@@ -56,8 +57,8 @@ call vundle#begin()
     Plugin 'flazz/vim-colorschemes'             " Colorschemes
     "------------------=== Installation For Powerline ===-------------
     "install powerline via pip3 install powerline-status
-    "install fonts for linux via sudo apt-get install fonts-powerline 
-    "install fonts for mac via 
+    "install fonts for linux via sudo apt-get install fonts-powerline
+    "install fonts for mac via
     "---
     "# clone
     "git clone https://github.com/powerline/fonts.git --depth=1
@@ -68,7 +69,7 @@ call vundle#begin()
     "cd ..
     "rm -rf fonts
     "On mac set the font in terminal preferences to meslo lg m dz for
-    "powerline 
+    "powerline
     "On ubunutu and linux flavors add the following to /etc/default/console-setup
     "---
     "CHARMAP="UTF-8"
@@ -96,9 +97,9 @@ call vundle#begin()
 
     "-------------------=== Python  ===-----------------------------
     Plugin 'klen/python-mode'                   " Python mode (docs, refactor, lints...)
-    "Plugin check out AG for searching 
+    "Plugin check out AG for searching
     Plugin 'scrooloose/syntastic'               " Syntax checking plugin for Vim
-    Plugin 'fatih/vim-go'                       " go language support including :GoBuild, :GoTest, :GoInstall, and :GoRun 
+    Plugin 'fatih/vim-go'                       " go language support including :GoBuild, :GoTest, :GoInstall, and :GoRun
 
 call vundle#end()                           " required
 filetype on
@@ -146,7 +147,7 @@ set secure                                  " prohibit .vimrc files to execute s
 inoremap jj <Esc>
 inoremap jk <Esc>
 
-" STOP using the arrow keys its redundant with vim 
+" STOP using the arrow keys its redundant with vim
 map <up> <nop>
 map <down> <nop>
 map <left> <nop>
@@ -160,10 +161,10 @@ map <right> <nop>
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
-map <C-l> <C-w>l 
+map <C-l> <C-w>l
 
 "=====================================================
-"" Tmux Settings 
+"" Tmux Settings
 "=====================================================
 if &term =~ '256color'
    " disable Background Color Erase (BCE) so that color schemes
@@ -333,4 +334,4 @@ let g:ycm_confirm_extra_conf=0
 nmap <leader>g :YcmCompleter GoTo<CR>
 nmap <leader>d :YcmCompleter GoToDefinition<CR>
 "---------------- sudo remap to save with sudo rights -----------------
-cnoremap w!! w !sudo tee % 
+cnoremap w!! w !sudo tee %
