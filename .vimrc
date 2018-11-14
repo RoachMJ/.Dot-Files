@@ -31,9 +31,7 @@ set nocompatible
 "" Vundle settings
 "=====================================================
 filetype off
-set rtp+=$vundle
-"UNIX/LINUX USERS use the following
-"set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
     Plugin 'VundleVim/Vundle.vim'               " let Vundle manage Vundle, required
