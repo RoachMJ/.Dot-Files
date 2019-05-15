@@ -53,6 +53,7 @@ call vundle#begin()
     Plugin 'rosenfeld/conque-term'              " Consoles as buffers
     Plugin 'tpope/vim-surround'                 " Parentheses, brackets, quotes, XML tags, and more
     Plugin 'flazz/vim-colorschemes'             " Colorschemes
+    Plugin 'sheerun/vim-polyglot'               " One Plugin to rule all languages see https://github.com/sheerun/vim-polyglot
     "------------------=== Installation For Powerline ===-------------
     "install powerline via pip3 install powerline-status
     "install fonts for linux via sudo apt-get install fonts-powerline
