@@ -1,0 +1,175 @@
+#  -------- Help -----------------
+# 
+# POWERLEVEL9K_<name-of-segment>_<state>_[BACKGROUND|FOREGROUND]
+# POWERLEVEL9K_VIRTUALENV_BACKGROUND="grey58"
+POWERLEVEL9K_CUSTOM_WIFI_SIGNAL="zsh_wifi_signal"
+POWERLEVEL9K_CUSTOM_WIFI_SIGNAL_BACKGROUND="white"
+POWERLEVEL9K_CUSTOM_WIFI_SIGNAL_FOREGROUND="black"
+
+zsh_wifi_signal(){
+        local output=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I)
+        local airport=$(echo $output | grep 'AirPort' | awk -F': ' '{print $2}')
+
+        if [ "$airport" = "Off" ]; then
+                local color='%F{black}'
+                echo -n "%{$color%}Wifi Off"
+        else
+                local ssid=$(echo $output | grep ' SSID' | awk -F': ' '{print $2}')
+                local speed=$(echo $output | grep 'lastTxRate' | awk -F': ' '{print $2}')
+                local color='%F{black}'
+
+                [[ $speed -gt 100 ]] && color='%F{black}'
+                [[ $speed -lt 50 ]] && color='%F{red}'
+
+                echo -n "%{$color%}$speed Mbps $ssid\uf1eb%{%f%}" # removed char not in my PowerLine font
+        fi
+}
+POWERLEVEL9K_CUSTOM_VPN_STATUS="vpn_status"
+POWERLEVEL9K_CUSTOM_VPN_STATUS_BACKGROUND="grey19"
+POWERLEVEL9K_CUSTOM_VPN_STATUS_FOREGROUND="black"
+
+vpn_status(){
+        local vpn=$(nslookup localhost | awk 'NR==1{print $2}')
+
+        if [ "$vpn" = "<host>" ]; then
+                local color="%F{green}"
+                echo -n "%{$color%}DEV"
+
+        elif [ "$vpn" = "<host>" ]; then
+               local color="%F{red}"
+                echo -n "%{$color%}EXT"
+
+        else
+                local color="%F{white}"
+                echo -n "%{$color%}VPN!"
+        fi
+}
+POWERLEVEL9K_CUSTOM_KUBE_STATUS="kube_status"
+POWERLEVEL9K_CUSTOM_KUBE_STATUS_BACKGROUND="grey19"
+POWERLEVEL9K_CUSTOM_KUBE_STATUS_FOREGROUND="black"
+
+kube_status(){
+        local context=$(kubectl config current-context)
+        local production=()
+        local staging=()
+        local development=()
+        context_len=${#context}
+
+        if [[ "$context" == *"arn"* ]]; 
+        then
+            context=$( echo "$context" | awk -F "/" '{print $2}')
+        fi 
+        if [[ "$context" == *"production"* ]]; then 
+            POWERLEVEL9K_CUSTOM_KUBE_STATUS_BACKGROUND="red"
+            local color="%F{red}"
+            local context_color="%F{red}"
+            echo -n "%{$color%}\U2388%{%f%} %{$context_color%}$context"
+        elif [[ "$context" == *"staging"* ]]; then 
+            POWERLEVEL9K_CUSTOM_KUBE_STATUS_BACKGROUND="green"
+            local color="%F{white}"
+            local context_color="%F{green}"
+            echo -n "%{$color%}\U2388%{%f%} %{$context_color%}$context"
+        else
+            POWERLEVEL9K_CUSTOM_KUBE_STATUS_BACKGROUND="green"
+            local color="%F{white}"
+            local context_color="%F{yellow}"
+            echo -n "%{$color%}\U2388%{%f%} %{$context_color%}$context"
+        fi
+
+#        local color="%F{red}"
+#        echo -n "%{$color%}\U2388%{%f%} $context"
+}
+POWERLEVEL9K_CUSTOM_NS_STATUS="ns_status"
+POWERLEVEL9K_CUSTOM_NS_STATUS_BACKGROUND="grey19"
+POWERLEVEL9K_CUSTOM_NS_STATUS_FOREGROUND="black"
+
+ns_status(){
+        
+        local context=$(kubectl config current-context)
+        local namespace=$(kubectl config view | grep "cluster: $context" -A 1 | awk 'NR>1' | grep namespace | awk '{print $2}')
+        if [ -z "$namespace" ]; then 
+            local namespace=defualt
+        fi
+            local color="%F{light blue}"
+            echo -n "%{$color%}ns $namespace"
+    
+}
+POWERLEVEL9K_CUSTOM_DCOS_STATUS="dcos_status"
+POWERLEVEL9K_CUSTOM_DCOS_STATUS_BACKGROUND="grey19"
+POWERLEVEL9K_CUSTOM_DCOS_STATUS_FOREGROUND="black"
+dcos_status(){
+        local context=$(dcos cluster list | grep "*" | awk '{print $2}')
+        
+            local color="%F{green}"
+            echo -n "%{$color%}dcos $context"
+    
+}
+# ---------------- Segments ---------
+#POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_vpn_status context virtualenv dir status)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_kube_status custom_ns_status virtualenv dir)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(vcs custom_ssid_status)
+# -----------------------------------
+# ------------- VIM -----------------
+POWERLEVEL9K_VI_MODE_INSERT_FOREGROUND='teal'
+POWERLEVEL9K_VI_INSERT_MODE_STRING="INS"
+POWERLEVEL9K_VI_COMMAND_MODE_STRING="COMM"
+# -----------------------------------
+
+POWERLEVEL9K_CUSTOM_SSID_STATUS="zsh_wifi_signal"
+POWERLEVEL9K_CUSTOM_SSID_STATUS_BACKGROUND="grey19"
+POWERLEVEL9K_CUSTOM_SSID_STATUS_FOREGROUND="black"
+POWERLEVEL9K_CONTEXT_TEMPLATE='%n'
+POWERLEVEL9K_CONTEXT_DEFAULT_FOREGROUND='black'
+POWERLEVEL9K_CONTEXT_DEFAULT_BACKGROUND='tan'
+POWERLEVEL9K_BATTERY_CHARGING='yellow'
+POWERLEVEL9K_BATTERY_CHARGED='green'
+POWERLEVEL9K_BATTERY_DISCONNECTED='$DEFAULT_COLOR'
+POWERLEVEL9K_BATTERY_LOW_THRESHOLD='10'
+POWERLEVEL9K_BATTERY_LOW_COLOR='red'
+# POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=''
+POWERLEVEL9K_BATTERY_ICON='\uf1e6 '
+# --------- new line after prompt ---------------
+POWERLEVEL9K_PROMPT_ON_NEWLINE=false
+# -------------------------------------------------
+# POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{014}\u2570%F{cyan}\uF460%F{073}\uF460%F{109}\uF460%f "
+POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='yellow'
+POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='yellow'
+POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+# ----------------------------------------
+POWERLEVEL9K_COLOR_SCHEME='dark'
+#----------------------------------------
+POWERLEVEL9K_VIRTUALENV_BACKGROUND="grey58"
+POWERLEVEL9K_TIME_FORMAT="%D{%H:%M %b %d}"
+POWERLEVEL9K_TIME_BACKGROUND='white'
+POWERLEVEL9K_RAM_BACKGROUND='yellow'
+POWERLEVEL9K_LOAD_CRITICAL_BACKGROUND="white"
+POWERLEVEL9K_LOAD_WARNING_BACKGROUND="white"
+POWERLEVEL9K_LOAD_NORMAL_BACKGROUND="white"
+POWERLEVEL9K_LOAD_CRITICAL_FOREGROUND="red"
+POWERLEVEL9K_LOAD_WARNING_FOREGROUND="yellow"
+POWERLEVEL9K_LOAD_NORMAL_FOREGROUND="black"
+POWERLEVEL9K_LOAD_CRITICAL_VISUAL_IDENTIFIER_COLOR="red"
+POWERLEVEL9K_LOAD_WARNING_VISUAL_IDENTIFIER_COLOR="yellow"
+POWERLEVEL9K_LOAD_NORMAL_VISUAL_IDENTIFIER_COLOR="green"
+POWERLEVEL9K_HOME_ICON=''
+POWERLEVEL9K_HOME_SUB_ICON=''
+POWERLEVEL9K_FOLDER_ICON=''
+POWERLEVEL9K_PYTHON_ICON="\ue73c"
+POWERLEVEL9K_STATUS_VERBOSE=true
+POWERLEVEL9K_STATUS_CROSS=true
+POWERLEVEL9K_DIR_HOME_BACKGROUND='051'
+POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='1051'
+POWERLEVEL9K_DIR_ETC_BACKGROUND='051'
+POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='051'
+## virtual env python ##
+## `vcs` color customization
+# POWERLEVEL9K_VCS_CLEAN_FOREGROUND='blue'
+# POWERLEVEL9K_VCS_CLEAN_BACKGROUND='black'
+# POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='yellow'
+# POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='black'
+# POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='red'
+# POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='black'
+# # `vi_mode` color customization
+#POWERLEVEL9K_PYTHON_ICON="\ue73c"
+
